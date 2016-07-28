@@ -29,6 +29,11 @@ function init() {
 	lGeometry.vertices.push(new THREE.Vector3(-0.5, -7.0, 0.5));
 	lGeometry.vertices.push(new THREE.Vector3( 0.5, -7.0, -0.5));
 	lGeometry.vertices.push(new THREE.Vector3(-0.5, -7.0, -0.5));
+  // extension 2
+  lGeometry.vertices.push(new THREE.Vector3(1.5, -8.0, 0.5));
+	lGeometry.vertices.push(new THREE.Vector3(1.5, -7.0, 0.5));
+	lGeometry.vertices.push(new THREE.Vector3(1.5, -8.0, -0.5));
+	lGeometry.vertices.push(new THREE.Vector3(1.5, -7.0, -0.5));
 
 	// Block Front
 	lGeometry.faces.push(new THREE.Face3(1, 2, 0));
@@ -66,7 +71,7 @@ function init() {
 	lGeometry.faces[10].materialIndex = 5;
 	lGeometry.faces[11].materialIndex = 5;
 
-  // Extension
+  // Extension 1
 	lGeometry.faces.push(new THREE.Face3(8, 9, 10));
 	lGeometry.faces.push(new THREE.Face3(11, 10, 9));
   lGeometry.faces[12].materialIndex = 0;
@@ -91,6 +96,32 @@ function init() {
 	lGeometry.faces.push(new THREE.Face3(2, 6, 10));
   lGeometry.faces[20].materialIndex = 4;
   lGeometry.faces[21].materialIndex = 4;
+
+  // Extension 2
+	lGeometry.faces.push(new THREE.Face3(13, 12, 14));
+	lGeometry.faces.push(new THREE.Face3(13, 14, 15));
+  lGeometry.faces[22].materialIndex = 0;
+  lGeometry.faces[23].materialIndex = 0;
+
+	lGeometry.faces.push(new THREE.Face3(13, 8, 2));
+	lGeometry.faces.push(new THREE.Face3(13, 2, 12));
+  lGeometry.faces[24].materialIndex = 1;
+  lGeometry.faces[25].materialIndex = 1;
+
+	lGeometry.faces.push(new THREE.Face3(10, 14, 15));
+	lGeometry.faces.push(new THREE.Face3(14, 10, 6));
+  lGeometry.faces[26].materialIndex = 2;
+  lGeometry.faces[27].materialIndex = 2;
+
+	lGeometry.faces.push(new THREE.Face3(14, 2, 6));
+	lGeometry.faces.push(new THREE.Face3(14, 12, 2));
+  lGeometry.faces[28].materialIndex = 3;
+  lGeometry.faces[29].materialIndex = 3;
+
+	lGeometry.faces.push(new THREE.Face3(13, 8, 15));
+	lGeometry.faces.push(new THREE.Face3(15, 8, 10));
+  lGeometry.faces[30].materialIndex = 4;
+  lGeometry.faces[31].materialIndex = 4;
 
 	//var lMaterial = new THREE.MeshBasicMaterial({color: 0xF6F900, wireframe: true});
 
