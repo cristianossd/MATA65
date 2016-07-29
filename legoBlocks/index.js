@@ -1001,6 +1001,177 @@ VRightExtGeometry.prototype.build = function() {
   scene.add(mesh);
 };
 
+var ArrowsExtGeometry = function() {
+  this.geometry = null;
+};
+
+ArrowsExtGeometry.prototype.build = function() {
+  this.geometry = new THREE.Geometry();
+
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, -1.0,  0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 0.0,  0.5));
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, 0.0,  0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, -1.0,  0.5));
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, -1.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 0.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, 0.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, -1.0, -0.5));
+
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, 1.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 1.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3( 0.5, 1.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 1.0, -0.5));
+
+  this.geometry.vertices.push(new THREE.Vector3(1.5, 0.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3(1.5, 1.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3(1.5, 0.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3(1.5, 1.0, -0.5));
+
+  this.geometry.vertices.push(new THREE.Vector3(-1.5, 0.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-1.5, 1.0, 0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-1.5, 0.0, -0.5));
+  this.geometry.vertices.push(new THREE.Vector3(-1.5, 1.0, -0.5));
+
+  this.geometry.vertices.push(new THREE.Vector3(0.5, 0.0, 1.5));
+  this.geometry.vertices.push(new THREE.Vector3(0.5, 1.0, 1.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 0.0, 1.5));
+  this.geometry.vertices.push(new THREE.Vector3(-0.5, 1.0, 1.5));
+
+  // Block Front
+  this.geometry.faces.push(new THREE.Face3(1, 2, 0));
+  this.geometry.faces.push(new THREE.Face3(1, 0, 3));
+  this.geometry.faces[0].materialIndex = 2;
+  this.geometry.faces[1].materialIndex = 2;
+
+  // Block Back
+  this.geometry.faces.push(new THREE.Face3(5, 4, 6));
+  this.geometry.faces.push(new THREE.Face3(5, 7, 4));
+  this.geometry.faces[2].materialIndex = 3;
+  this.geometry.faces[3].materialIndex = 3;
+
+  // Block Top
+  this.geometry.faces.push(new THREE.Face3(3, 0, 4));
+  this.geometry.faces.push(new THREE.Face3(3, 4, 7));
+  this.geometry.faces[4].materialIndex = 0;
+  this.geometry.faces[5].materialIndex = 0;
+
+  // Block Right
+  this.geometry.faces.push(new THREE.Face3(2, 6, 4));
+  this.geometry.faces.push(new THREE.Face3(2, 4, 0));
+  this.geometry.faces[6].materialIndex = 4;
+  this.geometry.faces[7].materialIndex = 4;
+
+  // Block Left
+  this.geometry.faces.push(new THREE.Face3(5, 1, 3));
+  this.geometry.faces.push(new THREE.Face3(5, 3, 7));
+  this.geometry.faces[8].materialIndex = 5;
+  this.geometry.faces[9].materialIndex = 5;
+
+  // Extension 1
+  this.geometry.faces.push(new THREE.Face3(8, 9, 10));
+  this.geometry.faces.push(new THREE.Face3(11, 10, 9));
+  this.geometry.faces[10].materialIndex = 1;
+  this.geometry.faces[11].materialIndex = 1;
+
+  this.geometry.faces.push(new THREE.Face3(11, 5, 10));
+  this.geometry.faces.push(new THREE.Face3(6, 10, 5));
+  this.geometry.faces[12].materialIndex = 3;
+  this.geometry.faces[13].materialIndex = 3;
+
+  // Extension 2
+  this.geometry.faces.push(new THREE.Face3(13, 12, 14));
+  this.geometry.faces.push(new THREE.Face3(13, 14, 15));
+  this.geometry.faces[14].materialIndex = 4;
+  this.geometry.faces[15].materialIndex = 4;
+
+  this.geometry.faces.push(new THREE.Face3(13, 8, 2));
+  this.geometry.faces.push(new THREE.Face3(13, 2, 12));
+  this.geometry.faces[16].materialIndex = 2;
+  this.geometry.faces[17].materialIndex = 2;
+
+  this.geometry.faces.push(new THREE.Face3(10, 14, 15));
+  this.geometry.faces.push(new THREE.Face3(14, 10, 6));
+  this.geometry.faces[18].materialIndex = 3;
+  this.geometry.faces[19].materialIndex = 3;
+
+  this.geometry.faces.push(new THREE.Face3(14, 2, 6));
+  this.geometry.faces.push(new THREE.Face3(14, 12, 2));
+  this.geometry.faces[20].materialIndex = 0;
+  this.geometry.faces[21].materialIndex = 0;
+
+  this.geometry.faces.push(new THREE.Face3(13, 8, 15));
+  this.geometry.faces.push(new THREE.Face3(15, 8, 10));
+  this.geometry.faces[22].materialIndex = 1;
+  this.geometry.faces[23].materialIndex = 1;
+
+  this.geometry.faces.push(new THREE.Face3(16, 17, 19));
+  this.geometry.faces.push(new THREE.Face3(16, 19, 18));
+  this.geometry.faces[24].materialIndex = 5;
+  this.geometry.faces[25].materialIndex = 5;
+
+  this.geometry.faces.push(new THREE.Face3(16, 17, 9));
+  this.geometry.faces.push(new THREE.Face3(16, 9, 1));
+  this.geometry.faces[26].materialIndex = 2;
+  this.geometry.faces[27].materialIndex = 2;
+
+  this.geometry.faces.push(new THREE.Face3(18, 11, 5));
+  this.geometry.faces.push(new THREE.Face3(18, 19, 11));
+  this.geometry.faces[28].materialIndex = 3;
+  this.geometry.faces[29].materialIndex = 3;
+
+  this.geometry.faces.push(new THREE.Face3(18, 16, 1));
+  this.geometry.faces.push(new THREE.Face3(18, 1, 5));
+  this.geometry.faces[30].materialIndex = 0;
+  this.geometry.faces[31].materialIndex = 0;
+
+  this.geometry.faces.push(new THREE.Face3(19, 17, 9));
+  this.geometry.faces.push(new THREE.Face3(19, 9, 11));
+  this.geometry.faces[32].materialIndex = 1;
+  this.geometry.faces[33].materialIndex = 1;
+
+  this.geometry.faces.push(new THREE.Face3(20, 21, 23));
+  this.geometry.faces.push(new THREE.Face3(20, 23, 22));
+  this.geometry.faces[34].materialIndex = 2;
+  this.geometry.faces[35].materialIndex = 2;
+
+  this.geometry.faces.push(new THREE.Face3(20, 2, 1));
+  this.geometry.faces.push(new THREE.Face3(20, 1, 22));
+  this.geometry.faces[36].materialIndex = 0;
+  this.geometry.faces[37].materialIndex = 0;
+
+  this.geometry.faces.push(new THREE.Face3(21, 8, 9));
+  this.geometry.faces.push(new THREE.Face3(21, 9, 23));
+  this.geometry.faces[38].materialIndex = 1;
+  this.geometry.faces[39].materialIndex = 1;
+
+  this.geometry.faces.push(new THREE.Face3(22, 1, 9));
+  this.geometry.faces.push(new THREE.Face3(22, 9, 23));
+  this.geometry.faces[40].materialIndex = 5;
+  this.geometry.faces[41].materialIndex = 5;
+
+  this.geometry.faces.push(new THREE.Face3(20, 2, 8));
+  this.geometry.faces.push(new THREE.Face3(20, 8, 21));
+  this.geometry.faces[42].materialIndex = 4;
+  this.geometry.faces[43].materialIndex = 4;
+
+  this.geometry.name = 'obj7';
+  this.geometry.center();
+
+  var boxMaterials = 	[
+    new THREE.MeshBasicMaterial({color:0xFF0000, side:THREE.DoubleSide}),
+  	new THREE.MeshBasicMaterial({color:0x00FF00, side:THREE.DoubleSide}),
+  	new THREE.MeshBasicMaterial({color:0x0000FF, side:THREE.DoubleSide}),
+  	new THREE.MeshBasicMaterial({color:0xFFFF00, side:THREE.DoubleSide}),
+  	new THREE.MeshBasicMaterial({color:0x00FFFF, side:THREE.DoubleSide}),
+  	new THREE.MeshBasicMaterial({color:0xFFFFFF, side:THREE.DoubleSide})
+  ];
+
+  var material = new THREE.MeshFaceMaterial(boxMaterials);
+  var mesh = new THREE.Mesh(this.geometry, material);
+
+  scene.add(mesh);
+};
+
 function clearScene() {
   scene.children = [];
   scene.add(camera);
@@ -1030,31 +1201,8 @@ function init() {
 
   scene.add(camera);
 
+  document.getElementById('geometryV').checked = true;
   var block = new VGeometry();
-  block.build();
-  clearScene();
-
-  block = new LGeometry();
-  block.build();
-  clearScene();
-
-  block = new SGeometry();
-  block.build();
-  clearScene();
-
-  block = new ArrowsGeometry();
-  block.build();
-  clearScene();
-
-  block = new VCenterExtGeometry();
-  block.build();
-  clearScene();
-
-  block = new VLeftExtGeometry();
-  block.build();
-  clearScene();
-
-  block = new VRightExtGeometry();
   block.build();
 
   document.getElementById('output').appendChild(renderer.domElement);
@@ -1063,3 +1211,51 @@ function init() {
 };
 
 window.onload = init;
+
+document.getElementById('geometryV').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new VGeometry();
+  block.build();
+});
+
+document.getElementById('geometryL').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new LGeometry();
+  block.build();
+});
+
+document.getElementById('geometryS').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new SGeometry();
+  block.build();
+});
+
+document.getElementById('geometryArrows').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new ArrowsGeometry();
+  block.build();
+});
+
+document.getElementById('geometryVCenterExt').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new VCenterExtGeometry();
+  block.build();
+});
+
+document.getElementById('geometryVLeftExt').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new VLeftExtGeometry();
+  block.build();
+});
+
+document.getElementById('geometryVRightExt').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new VRightExtGeometry();
+  block.build();
+});
+
+document.getElementById('geometryArrowsExt').addEventListener('change', function(evt) {
+  clearScene();
+  var block = new ArrowsExtGeometry();
+  block.build();
+});

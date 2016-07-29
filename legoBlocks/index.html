@@ -3,11 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Lego Blocks</title>
+  <link rel="stylesheet" href="index.css">
 
   <script src="../libs/three.min.js"></script>
 </head>
 <body>
-  <div id="output"></div>
+  <div id="output" class="output"></div>
+  <div class="panel">
+    <div class="title">Select the geometry below</div>
+
+    <div class="inputs">
+      <input id="geometryV" type="radio" name="geometry" /> Geometry "V" <br />
+      <input id="geometryL" type="radio" name="geometry" /> Geometry "L" <br />
+      <input id="geometryS" type="radio" name="geometry" /> Geometry "S" <br />
+      <input id="geometryArrows" type="radio" name="geometry" /> Geometry "Keyboard Arrows" <br />
+      <input id="geometryVCenterExt" type="radio" name="geometry" /> Geometry "V Center Extension" <br />
+      <input id="geometryVLeftExt" type="radio" name="geometry" /> Geometry "V Left Extension" <br />
+      <input id="geometryVRightExt" type="radio" name="geometry" /> Geometry "V Right Extension" <br />
+      <input id="geometryArrowsExt" type="radio" name="geometry" /> Geometry "Keyboard Arrows Extension" <br />
+    </div>
+  </div>
 
   <script src="index.js"></script>
 </body>
