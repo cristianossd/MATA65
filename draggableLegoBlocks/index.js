@@ -3,7 +3,8 @@
 var scene;
 var renderer;
 var camera;
-var currentBlock;
+var current;
+var group;
 var rotationX = 0.0;
 var rotationY = 0.0;
 var rotationZ = 0.0;
@@ -132,7 +133,7 @@ VGeometry.prototype.build = function() {
   var mesh = new THREE.Mesh(this.geometry, material);
   this.mesh = mesh;
 
-  scene.add(mesh);
+  //scene.add(mesh);
 };
 
 var LGeometry = function() {
@@ -1188,12 +1189,6 @@ function clearScene() {
 }
 
 function renderScene() {
-  /*
-  camera.rotation.x += 0.03;
-  camera.rotation.y += 0.02;
-  camera.rotation.z += 0.02;
-  */
-
   requestAnimationFrame(renderScene);
   renderer.render(scene, camera);
 }
@@ -1209,11 +1204,16 @@ function init() {
 
   scene.add(camera);
 
+  group = new THREE.Object3D;
+
   var blockAxis = new THREE.AxisHelper(3.0);
   var geometry = new VGeometry();
   geometry.build();
-  currentBlock = geometry.mesh;
-  currentBlock.add(blockAxis);
+  current = geometry.mesh;
+  current.add(blockAxis);
+
+  group.add(current);
+  scene.add(group);
 
   document.getElementById('output').appendChild(renderer.domElement);
   renderer.clear();
@@ -1227,66 +1227,61 @@ function makeTranslation(x, y, z, axis) {
     rotation[axis] += 0.08;
 
   m.identity();
-  currentBlock.matrix.copy(m);
+  group.matrix.copy(m);
   m.makeTranslation(x, y, z);
-  currentBlock.applyMatrix(m);
-  currentBlock.updateMatrix();
+  group.applyMatrix(m);
+  group.updateMatrix();
 
   m.identity();
+  current.matrix.copy(m);
   m.makeRotationX(rotation.x);
-  currentBlock.applyMatrix(m);
+  current.applyMatrix(m);
+  current.updateMatrix();
 
   m.identity();
   m.makeRotationY(rotation.y);
-  currentBlock.applyMatrix(m);
+  current.applyMatrix(m);
 
   m.identity();
   m.makeRotationZ(rotation.z);
-  currentBlock.applyMatrix(m);
-}
-
-function makeRotation(axis) {
-  var m = new THREE.Matrix4();
-  if (axis != null)
-    rotation[axis] += 0.08;
-
-  m.identity();
-  currentBlock.matrix.copy(m);
-  m.makeRotationX(rotation.x);
-  currentBlock.applyMatrix(m);
-  currentBlock.updateMatrix();
-
-  m.identity();
-  m.makeRotationY(rotation.y);
-  currentBlock.applyMatrix(m);
-
-  m.identity();
-  m.makeRotationZ(rotation.z);
-  currentBlock.applyMatrix(m);
+  current.applyMatrix(m);
 }
 
 document.addEventListener('keydown', evt => {
-  var key = evt.key;
   var code = evt.keyCode;
-  var x = currentBlock.position.x;
-  var y = currentBlock.position.y;
-  var z = currentBlock.position.z;
+  var x = group.position.x;
+  var y = group.position.y;
+  var z = group.position.z;
+  var axis = '';
 
-  if (key == 'ArrowUp' || code == 38) {
-    makeTranslation(x, y + 0.4, z, '');
-  } else if (key == 'ArrowDown' || code == 40) {
-    makeTranslation(x, y - 0.4, z, '');
-  } else if (key == 'ArrowLeft' || code == 37) {
-    makeTranslation(x - 0.4, y, z, '');
-  } else if (key == 'ArrowRight' || code == 39) {
-    makeTranslation(x + 0.4, y, z, '');
-  } else if (key == 'x' || code == 88) {
-    makeTranslation(x, y, z, 'x');
-  } else if (key == 'y' || code == 89) {
-    makeTranslation(x, y, z, 'y');
-  } else if (key == 'z' || code == 90) {
-    makeTranslation(x, y, z, 'z');
+  switch (code) {
+    case 37:
+      x -= 0.4;
+      break;
+    case 38:
+      y += 0.4;
+      break;
+    case 39:
+      x += 0.4;
+      break;
+    case 40:
+      y -= 0.4;
+      break;
+    case 88:
+      axis = 'x';
+      break;
+    case 89:
+      axis = 'y';
+      break;
+    case 90:
+      axis = 'z';
+      break;
+    default:
+      return;
+      break;
   }
+
+  makeTranslation(x, y, z, axis);
 });
 
 window.onload = init;
