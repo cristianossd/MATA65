@@ -1,0 +1,30 @@
+.output {
+  width: 600px;
+  display: inline-block;
+}
+
+.panel {
+  padding: 40px 20px;
+  background-color: #ECF0F1;
+  position: absolute;
+  max-height: 600px;
+  display: inline-block;
+}
+
+.panel .title {
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.panel .inputs {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #F1F4F5;
+}
+
+.panel .inputs input {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
