@@ -3,8 +3,16 @@
 var scene;
 var renderer;
 var camera;
+
+// geometries
 var current;
+var currentGroups = [];
 var group;
+var blocks = [];
+var blockGroups = [];
+var selected;
+
+// moving variables
 var rotationX = 0.0;
 var rotationY = 0.0;
 var rotationZ = 0.0;
@@ -131,9 +139,8 @@ VGeometry.prototype.build = function() {
 
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
-  this.mesh = mesh;
 
-  //scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var LGeometry = function() {
@@ -281,7 +288,7 @@ LGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var SGeometry = function() {
@@ -426,7 +433,7 @@ SGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var ArrowsGeometry = function() {
@@ -572,7 +579,7 @@ ArrowsGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var VCenterExtGeometry = function() {
@@ -718,7 +725,7 @@ VCenterExtGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var VLeftExtGeometry = function() {
@@ -863,7 +870,7 @@ VLeftExtGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var VRightExtGeometry = function() {
@@ -1009,7 +1016,7 @@ VRightExtGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 var ArrowsExtGeometry = function() {
@@ -1180,7 +1187,7 @@ ArrowsExtGeometry.prototype.build = function() {
   var material = new THREE.MeshFaceMaterial(boxMaterials);
   var mesh = new THREE.Mesh(this.geometry, material);
 
-  scene.add(mesh);
+  this.mesh = mesh;
 };
 
 function clearScene() {
@@ -1201,24 +1208,41 @@ function init() {
   renderer.setSize(600, 600);
 
   camera = new THREE.OrthographicCamera( -8.0, 8.0, 8.0, -8.0, 8.0, -8.0 );
-
   scene.add(camera);
 
   group = new THREE.Object3D;
 
-  var blockAxis = new THREE.AxisHelper(3.0);
+  var geometryAxis = new THREE.AxisHelper(3.0);
   var geometry = new VGeometry();
   geometry.build();
   current = geometry.mesh;
-  current.add(blockAxis);
+  current.add(geometryAxis);
 
   group.add(current);
+  currentGroups.push(group);
   scene.add(group);
+
+  buildBlock(new LGeometry());
+  buildBlock(new SGeometry());
+  buildBlock(new ArrowsGeometry());
+  buildBlock(new VCenterExtGeometry());
+  buildBlock(new VLeftExtGeometry());
+  buildBlock(new VRightExtGeometry());
+  buildBlock(new ArrowsExtGeometry());
 
   document.getElementById('output').appendChild(renderer.domElement);
   renderer.clear();
   renderScene();
 };
+
+function buildBlock(block) {
+  var blockGroup = new THREE.Object3D;
+  block.build();
+  block.mesh.add(new THREE.AxisHelper(3.0));
+  blocks.push(block.mesh);
+  blockGroup.add(block.mesh);
+  blockGroups.push(blockGroup);
+}
 
 function makeTranslation(x, y, z, axis) {
   var m = new THREE.Matrix4();
@@ -1245,6 +1269,15 @@ function makeTranslation(x, y, z, axis) {
   m.identity();
   m.makeRotationZ(rotation.z);
   current.applyMatrix(m);
+}
+
+function resetRotation() {
+  rotationX = 0.0;
+  rotationY = 0.0;
+  rotationZ = 0.0;
+  rotation.x = 0.0;
+  rotation.y = 0.0;
+  rotation.z = 0.0;
 }
 
 document.addEventListener('keydown', evt => {
@@ -1282,6 +1315,24 @@ document.addEventListener('keydown', evt => {
   }
 
   makeTranslation(x, y, z, axis);
+});
+
+document.getElementById('nextBlock').addEventListener('click', evt => {
+  evt.preventDefault();
+
+  var i = Math.floor(Math.random() * blockGroups.length);
+  group = blockGroups[i];
+  current = blocks[i];
+
+  blockGroups.splice(i, 1);
+  blocks.splice(i, 1);
+
+  resetRotation();
+  scene.add(group);
+
+  if (blockGroups.length === 0) {
+    evt.target.style.display = 'none';
+  }
 });
 
 window.onload = init;
