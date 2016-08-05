@@ -1200,6 +1200,16 @@ function renderScene() {
   renderer.render(scene, camera);
 }
 
+function setScale() {
+  var m = new THREE.Matrix4();
+
+  m.identity();
+  current.matrix.copy(m);
+  m.makeScale(1, 1, 1);
+  current.applyMatrix(m);
+  current.updateMatrix();
+}
+
 function init() {
   scene = new THREE.Scene();
 
@@ -1220,6 +1230,7 @@ function init() {
 
   group.add(current);
   currentGroups.push(group);
+  setScale();
   scene.add(group);
 
   buildBlock(new LGeometry());
@@ -1280,6 +1291,57 @@ function resetRotation() {
   rotation.z = 0.0;
 }
 
+function haveBlockCollision(xR, xL, yR, yL) {
+  var b = null;
+  var bx = null;
+  var by = null;
+  var betweenX = null;
+  var betweenY = null;
+
+  for (var i=0; i < currentGroups.length; i++) {
+    b = currentGroups[i];
+    if (b == group) continue;
+
+    bx = b.position.x;
+    by = b.position.y;
+
+    betweenX = (xR <= (bx+1.5) && xR >= (bx-1.5)) || (xL <= (bx+1.5) && xL >= (bx-1.5));
+    betweenY = (yR <= (by+1.5) && yR >= (by-1.5)) || (yL <= (by+1.5) && yL >= (by-1.5));
+
+    if (betweenX && betweenY) {
+      console.log('have');
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function haveSideCollision(xR, xL, yR, yL, side) {
+  var factor = 7.8;
+  var collision = {};
+
+  collision.top = (yR >= factor) || (yL >= factor);
+  collision.bottom = (yR <= -factor) || (yL <= -factor);
+  collision.left = (xR <= -factor) || (xL <= -factor);
+  collision.right = (xR >= factor) || (xL >= factor);
+
+  console.log(collision[side]);
+  console.log(group.position.y - 1.0);
+  return collision[side];
+}
+
+function checkCollision(addX, addY, side) {
+  var factor = 1.0;
+  var xR = group.position.x + addX + factor;
+  var xL = group.position.x + addX - factor;
+  var yR = group.position.y + addY + factor;
+  var yL = group.position.y + addY - factor;
+
+  return haveBlockCollision(xR, xL, yR, yL) ||
+         haveSideCollision(xR, xL, yR, yL, side);
+}
+
 document.addEventListener('keydown', evt => {
   var code = evt.keyCode;
   var x = group.position.x;
@@ -1289,16 +1351,20 @@ document.addEventListener('keydown', evt => {
 
   switch (code) {
     case 37:
-      x -= 0.4;
+      if (!checkCollision(-0.4, 0.0, 'left'))
+        x -= 0.4;
       break;
     case 38:
-      y += 0.4;
+      if (!checkCollision(0.0, 0.4, 'top'))
+        y += 0.4;
       break;
     case 39:
-      x += 0.4;
+      if (!checkCollision(0.4, 0.0, 'right'))
+        x += 0.4;
       break;
     case 40:
-      y -= 0.4;
+      if (!checkCollision(0.0, -0.4, 'bottom'))
+        y -= 0.4;
       break;
     case 88:
       axis = 'x';
@@ -1328,7 +1394,9 @@ document.getElementById('nextBlock').addEventListener('click', evt => {
   blocks.splice(i, 1);
 
   resetRotation();
+  setScale();
   scene.add(group);
+  currentGroups.push(group);
 
   if (blockGroups.length === 0) {
     evt.target.style.display = 'none';
@@ -1336,3 +1404,7 @@ document.getElementById('nextBlock').addEventListener('click', evt => {
 });
 
 window.onload = init;
+
+/*
+ * prevent to start if have a block in the center
+*/
