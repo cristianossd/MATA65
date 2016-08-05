@@ -10,7 +10,8 @@ var currentGroups = [];
 var group;
 var blocks = [];
 var blockGroups = [];
-var selected;
+var selected = 0;
+var newBlock = false;
 
 // moving variables
 var rotationX = 0.0;
@@ -1300,7 +1301,7 @@ function haveBlockCollision(xR, xL, yR, yL) {
 
   for (var i=0; i < currentGroups.length; i++) {
     b = currentGroups[i];
-    if (b == group) continue;
+    if (!newBlock && b == group) continue;
 
     bx = b.position.x;
     by = b.position.y;
@@ -1309,7 +1310,6 @@ function haveBlockCollision(xR, xL, yR, yL) {
     betweenY = (yR <= (by+1.5) && yR >= (by-1.5)) || (yL <= (by+1.5) && yL >= (by-1.5));
 
     if (betweenX && betweenY) {
-      console.log('have');
       return true;
     }
   }
@@ -1326,8 +1326,6 @@ function haveSideCollision(xR, xL, yR, yL, side) {
   collision.left = (xR <= -factor) || (xL <= -factor);
   collision.right = (xR >= factor) || (xL >= factor);
 
-  console.log(collision[side]);
-  console.log(group.position.y - 1.0);
   return collision[side];
 }
 
@@ -1340,6 +1338,23 @@ function checkCollision(addX, addY, side) {
 
   return haveBlockCollision(xR, xL, yR, yL) ||
          haveSideCollision(xR, xL, yR, yL, side);
+}
+
+function checkInitialCollision() {
+  return haveBlockCollision(1.0, -1.0, 1.0, -1.0);
+}
+
+function toggleBlockVisibility() {
+  group.visible = false;
+  setTimeout(() => group.visible = true, 100);
+}
+
+function show(id) {
+  document.getElementById(id).style.display = 'block';
+}
+
+function hide(id) {
+  document.getElementById(id).style.display = 'none';
 }
 
 document.addEventListener('keydown', evt => {
@@ -1386,6 +1401,15 @@ document.addEventListener('keydown', evt => {
 document.getElementById('nextBlock').addEventListener('click', evt => {
   evt.preventDefault();
 
+  newBlock = true;
+  if (checkInitialCollision()) {
+    show('alert');
+    newBlock = false;
+    return;
+  }
+  hide('alert');
+  newBlock = false;
+
   var i = Math.floor(Math.random() * blockGroups.length);
   group = blockGroups[i];
   current = blocks[i];
@@ -1404,7 +1428,3 @@ document.getElementById('nextBlock').addEventListener('click', evt => {
 });
 
 window.onload = init;
-
-/*
- * prevent to start if have a block in the center
-*/

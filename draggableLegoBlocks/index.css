@@ -46,3 +46,10 @@
 .panel .next a:hover, .panel .next a:focus {
   background-color: #E67E22;
 }
+
+.panel .alert {
+  display: none;
+  text-align: center;
+  margin-top: 10px;
+  color: #C0392B;
+}
