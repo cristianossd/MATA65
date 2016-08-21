@@ -3,32 +3,76 @@
 var scene;
 var renderer;
 var camera;
+var colors = [0x1ABC9C, 0x2ECC71, 0x9B59B6, 0xF1C40F, 0xE67E22, 0xE74C3C, 0xECF0F1];
 
 // geometries
+var well;
+var blockOptions = [VGeometry, LGeometry, SGeometry, ArrowsGeometry];
 var current;
-var currentGroups = [];
+var currentGroup;
 var group;
 var blocks = [];
 var blockGroups = [];
 var selected = 0;
-var newBlock = false;
 
 // moving variables
 var rotationX = 0.0;
 var rotationY = 0.0;
 var rotationZ = 0.0;
-var rotation = {
-  x: 0.0,
-  y: 0.0,
-  z: 0.0
-};
+var rotation = {x: 0.0, y: 0.0};
 
 function clearScene() {
   scene.children = [];
   scene.add(camera);
 }
 
+function downBlock() {
+  var x = group.position.x;
+  var y = group.position.y;
+  var z = group.position.z;
+
+  makeTranslation(x, y, z - 0.5, '');
+}
+
+function haveBottomCollision() {
+  var wellBottom = well.position.z - 300.0;
+
+  return (group.position.z - 8) == wellBottom;
+}
+
+function newBlock() {
+  var _color = colors[(blocks.length + 1) % colors.length];
+  current.material.wireframe = false;
+  current.material.color = new THREE.Color(_color);
+
+  group = new THREE.Object3D;
+  var geometryAxis = new THREE.AxisHelper(5.0); // temporary
+
+  var i = Math.floor(Math.random() * blockOptions.length);
+  var geometry = new blockOptions[i]();
+  geometry.build();
+  current = geometry.mesh;
+  current.add(geometryAxis);
+  blocks.push(current);
+
+  group.add(current);
+  blockGroups.push(group);
+  setScale();
+  scene.add(group);
+
+  updateBlocksNum();
+  resetRotation();
+}
+
 function renderScene() {
+  if (current != null) {
+    if (haveBottomCollision()) {
+      newBlock();
+    }
+
+    downBlock();
+  }
+
   requestAnimationFrame(renderScene);
   renderer.render(scene, camera);
 }
@@ -38,7 +82,7 @@ function setScale() {
 
   m.identity();
   current.matrix.copy(m);
-  m.makeScale(1, 1, 1);
+  m.makeScale(16, 16, 16);
   current.applyMatrix(m);
   current.updateMatrix();
 }
@@ -54,9 +98,10 @@ function init() {
   camera.position.z = 100;
   scene.add(camera);
 
-  var box = new THREE.BoxGeometry(60.0, 60.0, 300, 4, 4, 4);
+  var box = new THREE.BoxGeometry(60.0, 60.0, 600, 6, 6, 10);
   var material = new THREE.MeshBasicMaterial({color: 0x006600, wireframe: true});
   var depthBox = new THREE.Mesh(box, material);
+  well = depthBox;
   scene.add(depthBox);
 
   document.getElementById('output').appendChild(renderer.domElement);
@@ -77,7 +122,7 @@ function makeTranslation(x, y, z, axis) {
   var m = new THREE.Matrix4();
 
   if (axis != null)
-    rotation[axis] += 0.08;
+    rotation[axis] += Math.PI / 2;
 
   m.identity();
   group.matrix.copy(m);
@@ -96,74 +141,20 @@ function makeTranslation(x, y, z, axis) {
   current.applyMatrix(m);
 
   m.identity();
-  m.makeRotationZ(rotation.z);
+  m.makeScale(16, 16, 16);
   current.applyMatrix(m);
 }
 
 function resetRotation() {
   rotationX = 0.0;
   rotationY = 0.0;
-  rotationZ = 0.0;
+
   rotation.x = 0.0;
   rotation.y = 0.0;
-  rotation.z = 0.0;
 }
 
-function haveBlockCollision(xR, xL, yR, yL) {
-  var b = null;
-  var bx = null;
-  var by = null;
-  var betweenX = null;
-  var betweenY = null;
-
-  for (var i=0; i < currentGroups.length; i++) {
-    b = currentGroups[i];
-    if (!newBlock && b == group) continue;
-
-    bx = b.position.x;
-    by = b.position.y;
-
-    betweenX = (xR <= (bx+1.5) && xR >= (bx-1.5)) || (xL <= (bx+1.5) && xL >= (bx-1.5));
-    betweenY = (yR <= (by+1.5) && yR >= (by-1.5)) || (yL <= (by+1.5) && yL >= (by-1.5));
-
-    if (betweenX && betweenY) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function haveSideCollision(xR, xL, yR, yL, side) {
-  var factor = 7.8;
-  var collision = {};
-
-  collision.top = (yR >= factor) || (yL >= factor);
-  collision.bottom = (yR <= -factor) || (yL <= -factor);
-  collision.left = (xR <= -factor) || (xL <= -factor);
-  collision.right = (xR >= factor) || (xL >= factor);
-
-  return collision[side];
-}
-
-function checkCollision(addX, addY, side) {
-  var factor = 1.0;
-  var xR = group.position.x + addX + factor;
-  var xL = group.position.x + addX - factor;
-  var yR = group.position.y + addY + factor;
-  var yL = group.position.y + addY - factor;
-
-  return haveBlockCollision(xR, xL, yR, yL) ||
-         haveSideCollision(xR, xL, yR, yL, side);
-}
-
-function checkInitialCollision() {
-  return haveBlockCollision(1.0, -1.0, 1.0, -1.0);
-}
-
-function toggleBlockVisibility() {
-  group.visible = false;
-  setTimeout(() => group.visible = true, 100);
+function updateBlocksNum() {
+  document.getElementById('blocksNum').innerHTML = blocks.length;
 }
 
 function show(id) {
@@ -175,37 +166,33 @@ function hide(id) {
 }
 
 document.addEventListener('keydown', evt => {
+  if (current == null) return;
+
   var code = evt.keyCode;
   var x = group.position.x;
   var y = group.position.y;
   var z = group.position.z;
   var axis = '';
+  var factor = 1.0;
 
   switch (code) {
     case 37:
-      if (!checkCollision(-0.4, 0.0, 'left'))
-        x -= 0.4;
+      x -= factor;
       break;
     case 38:
-      if (!checkCollision(0.0, 0.4, 'top'))
-        y += 0.4;
+      y += factor;
       break;
     case 39:
-      if (!checkCollision(0.4, 0.0, 'right'))
-        x += 0.4;
+      x += factor;
       break;
     case 40:
-      if (!checkCollision(0.0, -0.4, 'bottom'))
-        y -= 0.4;
+      y -= factor;
       break;
     case 88:
       axis = 'x';
       break;
     case 89:
       axis = 'y';
-      break;
-    case 90:
-      axis = 'z';
       break;
     default:
       return;
@@ -215,33 +202,27 @@ document.addEventListener('keydown', evt => {
   makeTranslation(x, y, z, axis);
 });
 
-document.getElementById('nextBlock').addEventListener('click', evt => {
+document.getElementById('startBt').addEventListener('click', evt => {
   evt.preventDefault();
 
-  newBlock = true;
-  if (checkInitialCollision()) {
-    show('alert');
-    newBlock = false;
-    return;
-  }
-  hide('alert');
-  newBlock = false;
+  hide('startBt');
 
-  var i = Math.floor(Math.random() * blockGroups.length);
-  group = blockGroups[i];
-  current = blocks[i];
+  group = new THREE.Object3D;
+  var geometryAxis = new THREE.AxisHelper(10.0); // temporary
 
-  blockGroups.splice(i, 1);
-  blocks.splice(i, 1);
+  var i = Math.floor(Math.random() * blockOptions.length);
+  var geometry = new blockOptions[i]();
+  geometry.build();
+  current = geometry.mesh;
+  current.add(geometryAxis);
+  blocks.push(current);
 
-  resetRotation();
+  group.add(current);
+  blockGroups.push(group);
   setScale();
   scene.add(group);
-  currentGroups.push(group);
 
-  if (blockGroups.length === 0) {
-    evt.target.style.display = 'none';
-  }
+  updateBlocksNum();
 });
 
 window.onload = init;

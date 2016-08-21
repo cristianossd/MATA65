@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lego Blocks</title>
+  <title>BlockOut 3D</title>
   <link rel="stylesheet" href="index.css">
 
   <script src="../libs/three.min.js"></script>
@@ -10,14 +10,15 @@
 <body>
   <div id="output" class="output"></div>
   <div class="panel">
-    <div class="title">Block Out</div>
+    <div class="title">BlockOut 3D</div>
 
     <div class="inputs">
-      <strong>Score:</strong> Keyboard Arrows <br />
+      <strong>Score:</strong> <span id="score">0</span> <br />
+      <strong>Blocks in scene:</strong> <span id="blocksNum">0</span> <br />
     </div>
 
     <div class="next">
-      <a id="nextBlock">START</a>
+      <a id="startBt">START</a>
     </div>
   </div>
 
