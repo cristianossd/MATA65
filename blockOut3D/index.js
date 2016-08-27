@@ -41,6 +41,9 @@ function haveBottomCollision() {
 }
 
 function newBlock() {
+  blocks.push(current);
+  blockGroups.push(group);
+
   var _color = colors[(blocks.length + 1) % colors.length];
   current.material.wireframe = false;
   current.material.color = new THREE.Color(_color);
@@ -53,10 +56,8 @@ function newBlock() {
   geometry.build();
   current = geometry.mesh;
   current.add(geometryAxis);
-  blocks.push(current);
 
   group.add(current);
-  blockGroups.push(group);
   setScale();
   scene.add(group);
 
@@ -96,7 +97,6 @@ function init() {
 
   camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
   camera.position.z = 100;
-  scene.add(camera);
 
   var box = new THREE.BoxGeometry(60.0, 60.0, 600, 6, 6, 10);
   var material = new THREE.MeshBasicMaterial({color: 0x006600, wireframe: true});
@@ -177,16 +177,20 @@ document.addEventListener('keydown', evt => {
 
   switch (code) {
     case 37:
-      x -= factor;
+      if ((x - factor - 8.0) > well.position.x - 30.0)
+        x -= factor;
       break;
     case 38:
-      y += factor;
+      if ((y + factor + 8.0) < well.position.y + 30.0)
+        y += factor;
       break;
     case 39:
-      x += factor;
+      if ((x + factor + 8.0) < well.position.x + 30.0)
+        x += factor;
       break;
     case 40:
-      y -= factor;
+      if ((y - factor - 8.0) > well.position.y - 30.0)
+        y -= factor;
       break;
     case 88:
       axis = 'x';
@@ -215,10 +219,8 @@ document.getElementById('startBt').addEventListener('click', evt => {
   geometry.build();
   current = geometry.mesh;
   current.add(geometryAxis);
-  blocks.push(current);
 
   group.add(current);
-  blockGroups.push(group);
   setScale();
   scene.add(group);
 
