@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Scale</title>
+  <link rel="stylesheet" href="index.css">
+
+  <script src="../libs/three.min.js"></script>
+</head>
+<body>
+  <div id="output" class="output"></div>
+
+  <div class="panel">
+    <div class="title">Color Scale</div>
+
+    <div class="inputs">
+      Choose the object to be rendered: <br /><br />
+
+      <input id="luigiInput" type="radio" name="obj"> Luigi<br />
+      <input id="catInput" type="radio" name="obj"> Cat<br />
+      <input id="tigerInput" type="radio" name="obj"> Tiger<br />
+    </div>
+  </div>
+
+	<script id="shader-vs" type="x-shader/x-vertex">
+    varying vec2 vUv;
+
+		void main(void) {
+      vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+	</script>
+
+	<script id="shader-fs" type="x-shader/x-fragment">
+    uniform int bitSize;
+    uniform sampler2D tDiffuse;
+
+    varying vec2 vUv;
+
+		void main(void) {
+			gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+      vec4 texel = texture2D( tDiffuse, vUv );
+      float n = pow(float(bitSize),2.0);
+      float newR = floor(texel.r*n);
+      float newG = floor(texel.g*n);
+      float newB = floor(texel.b*n);
+      gl_FragColor = vec4(newR, newG, newB, texel.w );
+		}
+	</script>
+
+	<script src="../libs/three.js"></script>
+  <script src="../libs/OrbitControls.js"></script>
+  <script src="../libs/OBJLoader.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
