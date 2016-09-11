@@ -107,4 +107,8 @@ document.getElementById('tigerInput').addEventListener('change', () => {
   scene.children[2].visible = true;
 });
 
+document.getElementById('felineInput').checked = false;
+document.getElementById('catInput').checked = false;
+document.getElementById('tigerInput').checked = false;
+
 window.onload = init;
