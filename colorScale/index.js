@@ -14,7 +14,7 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	loadMesh('assets/Luigi.obj');
+	loadMesh('assets/feline.obj');
 
 	renderer = new THREE.WebGLRenderer();
 
@@ -89,7 +89,7 @@ function buildScene(loadedMesh) {
 	render();
 }
 
-document.getElementById('luigiInput').addEventListener('change', () => {
+document.getElementById('felineInput').addEventListener('change', () => {
   scene.children[0].visible = true;
   scene.children[1].visible = false;
   scene.children[2].visible = false;
