@@ -10,14 +10,6 @@
 <body>
   <div id="output" class="output"></div>
 
-  <div class="panel">
-    <div class="title">Multiple Textures</div>
-
-    <p>
-      Rendering two textures around the Earth
-    </p>
-  </div>
-
 	<script id="shader-vs" type="x-shader/x-vertex">
     varying vec2 vUv;
 
@@ -40,8 +32,7 @@
 		}
 	</script>
 
-  <script src="../libs/OrbitControls.js"></script>
-  <script src="../libs/OBJLoader.js"></script>
+  <script src="../libs/TrackballControls.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
