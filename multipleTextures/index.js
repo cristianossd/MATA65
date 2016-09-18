@@ -31,13 +31,16 @@ function init() {
   controls.keys = [65, 83, 68];
 
 	// Earth
-  var earthTexture = THREE.ImageUtils.loadTexture('earth.png');
+  var textureLoader = new THREE.TextureLoader();
+  var earthTexture = textureLoader.load('earth.png');
+  var cloudsTexture = textureLoader.load('clouds.png');
 
   var geometry = new THREE.SphereGeometry(2, 30, 30);
   var material = new THREE.ShaderMaterial({
     uniforms: {
       color: {type: 'f', value: 0.0},
-      img: {type: 't', value: earthTexture}
+      earth: {type: 't', value: earthTexture},
+      clouds: {type: 't', value: cloudsTexture}
     },
     vertexShader: document.getElementById('shader-vs').text,
     fragmentShader: document.getElementById('shader-fs').text

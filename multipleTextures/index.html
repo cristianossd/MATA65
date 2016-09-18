@@ -24,10 +24,15 @@
 
     varying vec2 vUv;
     uniform float color;
-    uniform sampler2D img;
+    uniform sampler2D earth;
+    uniform sampler2D clouds;
 
 		void main(void) {
-			gl_FragColor = texture2D(img, vUv);
+      vec3 c;
+      vec4 t1 = texture2D(earth, vUv);
+      vec4 t2 = texture2D(clouds, vUv);
+      c = t1.rgb * t1.a + t2.rgb * t2.a;
+			gl_FragColor = vec4(c, 1.0);
 		}
 	</script>
 
