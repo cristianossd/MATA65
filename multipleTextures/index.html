@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple Textures</title>
+  <link rel="stylesheet" href="index.css">
+
+  <script src="../libs/three.min.js"></script>
+</head>
+<body>
+  <div id="output" class="output"></div>
+
+  <div class="panel">
+    <div class="title">Multiple Textures</div>
+
+    <p>
+      Rendering two textures around the Earth
+    </p>
+  </div>
+
+	<script id="shader-vs" type="x-shader/x-vertex">
+    varying vec2 vUv;
+
+		void main(void) {
+      vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+	</script>
+
+	<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    uniform vec3 uChannel;
+    uniform sampler2D tDiffuse;
+    varying vec2 vUv;
+
+		void main(void) {
+      vec4 c = texture2D(tDiffuse, vUv);
+			gl_FragColor = vec4(c.rgb, 1.0);
+		}
+	</script>
+
+  <script src="../libs/OrbitControls.js"></script>
+  <script src="../libs/OBJLoader.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
