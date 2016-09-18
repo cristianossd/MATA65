@@ -31,8 +31,17 @@ function init() {
   controls.keys = [65, 83, 68];
 
 	// Earth
+  var earthTexture = THREE.ImageUtils.loadTexture('earth.png');
+
   var geometry = new THREE.SphereGeometry(2, 30, 30);
-  var material = new THREE.MeshBasicMaterial({color: 0xFFFF00, wireframe: true});
+  var material = new THREE.ShaderMaterial({
+    uniforms: {
+      color: {type: 'f', value: 0.0},
+      img: {type: 't', value: earthTexture}
+    },
+    vertexShader: document.getElementById('shader-vs').text,
+    fragmentShader: document.getElementById('shader-fs').text
+  });
   var sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
 

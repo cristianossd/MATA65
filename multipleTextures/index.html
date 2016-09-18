@@ -22,13 +22,12 @@
 	<script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
 
-    uniform vec3 uChannel;
-    uniform sampler2D tDiffuse;
     varying vec2 vUv;
+    uniform float color;
+    uniform sampler2D img;
 
 		void main(void) {
-      vec4 c = texture2D(tDiffuse, vUv);
-			gl_FragColor = vec4(c.rgb, 1.0);
+			gl_FragColor = texture2D(img, vUv);
 		}
 	</script>
 
